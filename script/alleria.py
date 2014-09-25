@@ -16,7 +16,7 @@ def run():
     suc_handler = open('../output/trading_desk.success.log', 'w')
     count = 0
     case_list = get_cases()
-    for case in case_list[:10]:
+    for case in case_list:
         positive_case_result = SortTest(case)
         negative_case = QueryProducer(case).get_reverse_order()
         negative_case_result = SortTest(negative_case)
