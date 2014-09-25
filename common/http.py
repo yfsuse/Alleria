@@ -14,7 +14,7 @@ def get_data(query_data):
     para_data = {"report_param":  query_data}
     post_data = urllib.urlencode(para_data)
     try:
-        f = urllib2.build_opener().open(urllib2.Request(query_url, post_data), timeout = 30).read()
+        f = urllib2.build_opener().open(urllib2.Request(query_url, post_data), timeout = 60).read()
     except Exception as e:
         print 'Http Error, No data Get'
         exit(-1)

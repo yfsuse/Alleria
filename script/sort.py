@@ -5,6 +5,17 @@ __author__ = 'jeff.yu'
 
 from common.http import get_data
 from common.parser import QueryProducer
+import logging
+
+
+logger = logging.getLogger("endlesscode")
+formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s', '%d %b %Y %H:%M:%S')
+file_handler = logging.FileHandler("../output/compare.debug.log")
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
+logger.setLevel(logging.DEBUG)
+
+
 
 class SortTest(object):
 
@@ -12,6 +23,7 @@ class SortTest(object):
         self.query = query
         self.http_data = get_data(self.query)
         self.http_len_data = len(self.http_data)
+
 
     def get_len_data(self):
         return len(self.http_data)
@@ -25,17 +37,23 @@ class SortTest(object):
         return orderdata
 
     def __cmp__(self, other):
+
         if self.http_len_data == other.http_len_data:
             if len(set(str(self.http_data)) - set(str(other.http_data))) == 0: # if not str() then unhashable type: 'list' raised
                 reverse_data = other.get_orderdata_list()
                 reverse_data.reverse()
-                if self.get_orderdata_list() == reverse_data:
+                orderdata_list = self.get_orderdata_list()
+                if orderdata_list == reverse_data:
                     return 0
                 else:
+                    logger.debug("""Data Order Not Equal: {0}
+                                                    {1}\n\n""".format(orderdata_list, reverse_data))
                     return -1
             else:
+                logger.debug('data set not equal')
                 return -1
         else:
+            logger.debug('data len not equal\n')
             return -1
 
 if __name__ == '__main__':
