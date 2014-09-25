@@ -1,10 +1,7 @@
-__author__ = 'jeff.yu'
-
-
 #! /usr/bin/env python
 # --*-- coding : utf-8 --*--
 
-
+__author__ = 'jeff.yu'
 from common.producer import *
 from sort import SortTest
 from page import PageTest

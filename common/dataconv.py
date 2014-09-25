@@ -1,7 +1,9 @@
-__author__ = 'jeff.yu'
-
 #! /usr/bin/env python
 # --*-- coding : utf-8 --*--
+
+__author__ = 'jeff.yu'
+
+
 
 
 def conv_data(seq, check_level = "low"):

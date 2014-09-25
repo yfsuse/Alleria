@@ -1,7 +1,9 @@
-__author__ = 'jeff.yu'
-
 #! /usr/bin/env python
 # --*-- coding = utf-8 --*--
+
+__author__ = 'jeff.yu'
+
+
 
 from base import Test
 from common.parser import QueryProducer
