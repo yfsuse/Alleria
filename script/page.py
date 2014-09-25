@@ -10,7 +10,8 @@ from common.parser import QueryProducer
 import logging
 import logging.config
 from common.dataconv import conv_data
-
+import sys
+sys.path.append(sys.path[0].replace('script', 'common'))
 
 class PageTest(Test):
 

@@ -6,7 +6,8 @@ from common.producer import *
 from sort import SortTest
 from page import PageTest
 from common.parser import QueryProducer
-
+import sys
+sys.path.append(sys.path[0].replace('script', 'common'))
 
 def run_sort(islp = False):
 
