@@ -30,16 +30,61 @@ def get_order():
 
     return choice(COMMON_DATA)
 
-def get_cases():
+def get_page():
+
+    return choice(range(0, 10))
+
+def get_size():
+
+    return choice(range(1, 20))
+
+def get_sort_cases(islp = False):
 
     case_list = []
+
+    if islp:
+        old_pattern = '"contrack_druid_datasource_ds","report_id"'
+        new_pattern = '"contrack_druid_datasource_ds","process_type":"lp","report_id"'
+        REF_QUERY_TEMPLATE = QUERY_TEMPLATE.replace(old_pattern, new_pattern)
+    else:
+        REF_QUERY_TEMPLATE =  QUERY_TEMPLATE
     group_combinations = get_groups()
     for group in group_combinations:
-        query_str = QUERY_TEMPLATE % (group, get_order())
+        query_str = REF_QUERY_TEMPLATE % (group, get_order())
         query = query_str.replace("'", '"')
+        if islp:
+            if query.find("offer_id") != -1:
+                pass
+            else:
+                query = query.replace('],"data"', ',"offer_id"],"data"')
         case_list.append(query)
     return case_list
 
+def get_page_cases(islp = False):
+    case_list = []
+    if islp:
+        old_pattern = '"contrack_druid_datasource_ds","report_id"'
+        new_pattern = '"contrack_druid_datasource_ds","process_type":"lp","report_id"'
+        REF_QUERY_TEMPLATE = QUERY_TEMPLATE.replace(old_pattern, new_pattern)
+    else:
+        REF_QUERY_TEMPLATE =  QUERY_TEMPLATE
+    group_combinations = get_groups()
+    for group in group_combinations:
+        old_pagination = '"size":1000000,"page":0'
+        new_pagination = '"size":{0},"page":{1}'.format(get_page(), get_size())
+        query_str = REF_QUERY_TEMPLATE % (group, get_order())
+        page_query_str = query_str.replace(old_pagination, new_pagination)
+        query = page_query_str.replace("'", '"')
+        if islp:
+            if query.find("offer_id") != -1:
+                pass
+            else:
+                query = query.replace('],"data"', ',"offer_id"],"data"')
+        case_list.append(query)
+    return case_list
 
 if __name__ == '__main__':
-    get_cases()
+    sort_cases = get_sort_cases(islp=True)[:5]
+    for case in sort_cases:
+        print case
+    # get_page_cases()

@@ -3,30 +3,22 @@ __author__ = 'jeff.yu'
 #! /usr/bin/env python
 # --*-- coding:utf-8 --*--
 
-from common.http import get_data
+
 from common.parser import QueryProducer
+from base import Test
 import logging
-
-
-logger = logging.getLogger("endlesscode")
-formatter = logging.Formatter('%(asctime)s %(levelname)-8s %(message)s', '%d %b %Y %H:%M:%S')
-file_handler = logging.FileHandler("../output/compare.debug.log")
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
-logger.setLevel(logging.DEBUG)
+import logging.config
+from common.dataconv import conv_data
 
 
 
-class SortTest(object):
+class SortTest(Test):
 
-    def __init__(self, query):
-        self.query = query
-        self.http_data = get_data(self.query)
-        self.http_len_data = len(self.http_data)
-
-
-    def get_len_data(self):
-        return len(self.http_data)
+    def __init__(self, query, check_level = "low"):
+        logging.config.fileConfig("../config/logging.ini")
+        self.logger = logging.getLogger("alleria")
+        self.check_level = check_level
+        super(SortTest, self).__init__(query)
 
     def get_orderdata_list(self):
         orderBy = QueryProducer(self.query).get_order_key()
@@ -38,22 +30,27 @@ class SortTest(object):
 
     def __eq__(self, other):
 
+        if self.http_len_data == 0 or other.http_len_data == 0:
+            self.logger.debug('sort - data set is null: {0}'.format(self.query))
+            return False
+
+
         if self.http_len_data == other.http_len_data:
             if len(set(str(self.http_data)) - set(str(other.http_data))) == 0: # if not str() then unhashable type: 'list' raised
                 reverse_data = other.get_orderdata_list()
                 reverse_data.reverse()
                 order_data_list = self.get_orderdata_list()
-                if order_data_list == reverse_data:
+                if conv_data(order_data_list, self.check_level) == conv_data(reverse_data, self.check_level):
                     return True
                 else:
-                    logger.debug("""Data Order Not Equal: {0}
-                                                    {1}\n\n""".format(order_data_list, reverse_data))
+                    self.logger.debug("""sort - the content of data not equal: {0}
+                                                                     {1}\n\n""".format(order_data_list, reverse_data))
                     return False
             else:
-                logger.debug('data set not equal')
+                self.logger.debug('sort - data set not equal')
                 return False
         else:
-            logger.debug('data len not equal\n')
+            self.logger.debug('sort - data len not equal')
             return False
 
 if __name__ == '__main__':
