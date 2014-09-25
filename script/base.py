@@ -5,9 +5,12 @@ __author__ = 'jeff.yu'
 
 
 
-from common.http import get_data
+
 import sys
-sys.path.append(sys.path[0].replace('\script', ''))
+sys.path.append(sys.path[0].replace('/script', ''))
+
+from common.http import get_data
+
 
 class Test(object):
 

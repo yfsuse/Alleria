@@ -1,19 +1,23 @@
-#! /usr/bin/env python
+#! \usr\bin\env python
 # --*-- coding : utf-8 --*--
 
 __author__ = 'jeff.yu'
+
+import sys
+sys.path.append(sys.path[0].replace('\script', ''))
+
+
 from common.producer import *
 from sort import SortTest
 from page import PageTest
 from common.parser import QueryProducer
-import sys
-sys.path.append(sys.path[0].replace('\script', ''))
+
 
 def run_sort(islp = False):
 
     case_list = get_sort_cases(islp)
-    err_handler = open('../log/sort.error.log', 'w')
-    suc_handler = open('../log/sort.success.log', 'w')
+    err_handler = open('..\log\sort.error.log', 'w')
+    suc_handler = open('..\log\sort.success.log', 'w')
     count = 0
     for case in case_list[:1]:
         positive_case_result = SortTest(case)
@@ -32,8 +36,8 @@ def run_sort(islp = False):
 def run_page(islp = False):
 
     case_list = get_page_cases(islp)
-    err_handler = open('../log/page.error.log', 'w')
-    suc_handler = open('../log/page.success.log', 'w')
+    err_handler = open('..\log\page.error.log', 'w')
+    suc_handler = open('..\log\page.success.log', 'w')
     count = 0
     for case in case_list[:5]:
         negative_case_result = PageTest(case)
