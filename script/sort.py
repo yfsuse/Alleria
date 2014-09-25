@@ -10,7 +10,7 @@ import logging
 import logging.config
 from common.dataconv import conv_data
 import sys
-sys.path.append(sys.path[0].replace('script', 'common'))
+sys.path.append(sys.path[0].replace('\script', ''))
 
 
 

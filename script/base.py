@@ -7,7 +7,7 @@ __author__ = 'jeff.yu'
 
 from common.http import get_data
 import sys
-sys.path.append(sys.path[0].replace('script', 'common'))
+sys.path.append(sys.path[0].replace('\script', ''))
 
 class Test(object):
 
