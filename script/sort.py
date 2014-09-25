@@ -6,7 +6,7 @@ __author__ = 'jeff.yu'
 
 
 import sys
-sys.path.append(sys.path[0].replace('\script', ''))
+sys.path.append(sys.path[0].replace('/script', ''))
 
 from common.parser import QueryProducer
 from base import Test
@@ -18,7 +18,7 @@ from common.dataconv import conv_data
 class SortTest(Test):
 
     def __init__(self, query, check_level = "low"):
-        logging.config.fileConfig("..\config\logging.ini")
+        logging.config.fileConfig("../config/logging.ini")
         self.logger = logging.getLogger("alleria")
         self.check_level = check_level
         super(SortTest, self).__init__(query)
