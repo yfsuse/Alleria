@@ -42,12 +42,12 @@ class SortTest(object):
             if len(set(str(self.http_data)) - set(str(other.http_data))) == 0: # if not str() then unhashable type: 'list' raised
                 reverse_data = other.get_orderdata_list()
                 reverse_data.reverse()
-                orderdata_list = self.get_orderdata_list()
-                if orderdata_list == reverse_data:
+                order_data_list = self.get_orderdata_list()
+                if order_data_list == reverse_data:
                     return 0
                 else:
                     logger.debug("""Data Order Not Equal: {0}
-                                                    {1}\n\n""".format(orderdata_list, reverse_data))
+                                                    {1}\n\n""".format(order_data_list, reverse_data))
                     return -1
             else:
                 logger.debug('data set not equal')
