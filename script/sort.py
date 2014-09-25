@@ -36,7 +36,7 @@ class SortTest(object):
             orderdata.append(dataset[order_index])
         return orderdata
 
-    def __cmp__(self, other):
+    def __eq__(self, other):
 
         if self.http_len_data == other.http_len_data:
             if len(set(str(self.http_data)) - set(str(other.http_data))) == 0: # if not str() then unhashable type: 'list' raised
@@ -44,17 +44,17 @@ class SortTest(object):
                 reverse_data.reverse()
                 order_data_list = self.get_orderdata_list()
                 if order_data_list == reverse_data:
-                    return 0
+                    return True
                 else:
                     logger.debug("""Data Order Not Equal: {0}
                                                     {1}\n\n""".format(order_data_list, reverse_data))
-                    return -1
+                    return False
             else:
                 logger.debug('data set not equal')
-                return -1
+                return False
         else:
             logger.debug('data len not equal\n')
-            return -1
+            return False
 
 if __name__ == '__main__':
     query = '{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{"offer_id":{"$eq":-1}}},"sort":[{"orderBy":"clicks","order":-1}]}'
