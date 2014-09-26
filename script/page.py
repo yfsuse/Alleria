@@ -38,11 +38,15 @@ class PageTest(Test):
 
     def __eq__(self, other):
 
-        page_data = conv_data(self.http_data[1:], self.check_level)
-        no_page_data = conv_data(other.get_split_data(), self.check_level)
+        try:
+            page_data = conv_data(self.http_data[1:], self.check_level)
+            no_page_data = conv_data(other.get_split_data(), self.check_level)
+        except TypeError as e:
+            self.logger.error("page - data set is null:  {0}".format(self.query))
+            return False
 
         if page_data == None or no_page_data == None:
-            self.logger.error("age - data set is null:  {0}".format(self.query))
+            self.logger.error("page - data set is null:  {0}".format(self.query))
             return False
 
         if len(set(str(page_data)) - set(str(no_page_data))) == 0: # step 2: if data set not equals return false
