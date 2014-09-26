@@ -22,13 +22,11 @@ def get_data(query_data):
     para_data = {"report_param":  query_data}
     post_data = urllib.urlencode(para_data)
     format_data = None
-    f = ''
     try:
         f = urllib2.build_opener().open(urllib2.Request(query_url, post_data), timeout = 60).read()
-        if f == '':
-            logger.debug("Http Error, Can't Get Data: {0}\t{1}".format(query_data, f))
-        else:
-            format_data = json.loads(f)['data']['data']
+        format_data = json.loads(f)['data']['data']
+    except TypeError as tp:
+        logger.debug("Http Error, Wait 60 Seconds, Can't Get Data: {0}\t{1}".format(query_data, f))
     except Exception as e:
         logger.debug('parser response data to json Error: {0}\n{1}'.format(query_data, f))
     return format_data
