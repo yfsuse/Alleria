@@ -22,6 +22,7 @@ def get_data(query_data):
     para_data = {"report_param":  query_data}
     post_data = urllib.urlencode(para_data)
     format_data = None
+    f = ''
     try:
         f = urllib2.build_opener().open(urllib2.Request(query_url, post_data), timeout = 60).read()
         format_data = json.loads(f)['data']['data']
