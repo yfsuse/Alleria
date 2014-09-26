@@ -38,13 +38,13 @@ class PageTest(Test):
         no_page_data = conv_data(other.get_split_data(), self.check_level)
 
         if page_data == None or no_page_data == None:
-            self.logger.debug("age - data set is null:  {0}".format(self.query))
+            self.logger.error("age - data set is null:  {0}".format(self.query))
             return False
 
         if len(set(str(page_data)) - set(str(no_page_data))) == 0: # step 2: if data set not equals return false
             return True
         else:
-            self.logger.debug("""page - content of data is not equal {0}
+            self.logger.error("""page - content of data is not equal {0}
                                                                               {1}""".format(page_data, no_page_data))
             return False
 

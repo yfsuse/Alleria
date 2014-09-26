@@ -46,14 +46,14 @@ class SortTest(Test):
                 if conv_data(order_data_list, self.check_level) == conv_data(reverse_data, self.check_level):
                     return True
                 else:
-                    self.logger.debug("""sort - the content of data not equal: {0}
-                                                                     {1}\n\n""".format(order_data_list, reverse_data))
+                    self.logger.error("""sort - the content of data not equal: {0}
+                                                                                  {1}\n\n""".format(order_data_list, reverse_data))
                     return False
             else:
-                self.logger.debug('sort - data set not equal')
+                self.logger.error('sort - data set not equal')
                 return False
         else:
-            self.logger.debug('sort - data len not equal')
+            self.logger.error('sort - data len not equal')
             return False
 
 if __name__ == '__main__':
