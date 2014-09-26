@@ -38,7 +38,10 @@ def run_sort(islp = False):
         else:
             err_handler.writelines(case + '\n')
         count += 1
-        print ctime() + " run sort case at : ", count
+        if islp:
+            print ctime() + " run lp sort case at : ", count
+        else:
+            print ctime() + " run sort case at : ", count
     err_handler.close()
     suc_handler.close()
 
@@ -67,7 +70,10 @@ def run_page(islp = False):
         else:
             err_handler.writelines(case + '\n')
         count += 1
-        print ctime() + " run page case at : ", count
+        if islp:
+            print ctime() + " run lp page case at : ", count
+        else:
+            print ctime() + " run page case at : ", count
     err_handler.close()
     suc_handler.close()
 
