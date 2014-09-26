@@ -19,9 +19,13 @@ from common.dataconv import conv_data
 
 class PageTest(Test):
 
-    def __init__(self, query, check_level = "low"):
+    def __init__(self, query, check_level = "low", islp = False):
         super(PageTest, self).__init__(query)
         self.check_level = check_level
+        if islp:
+            self.log_identifier = "PageLp"
+        else:
+            self.log_identifier = "Page"
         logging.config.fileConfig("../config/logging.ini")
         self.logger = logging.getLogger("alleria")
         self.queryparser = QueryProducer(self.query)
@@ -44,8 +48,12 @@ class PageTest(Test):
         if len(set(str(page_data)) - set(str(no_page_data))) == 0: # step 2: if data set not equals return false
             return True
         else:
-            self.logger.error("""page - content of data is not equal {0}
-                                                                              {1}""".format(page_data, no_page_data))
+            self.logger.error("""{0}\n
+                                 [{1}] content of data is not equal {2}
+                                                                    {3}""".format(self.query,
+                                                                                  self.log_identifier,
+                                                                                  page_data,
+                                                                                  no_page_data))
             return False
 
 if __name__ == '__main__':

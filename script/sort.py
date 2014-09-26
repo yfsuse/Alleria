@@ -17,10 +17,14 @@ from common.dataconv import conv_data
 
 class SortTest(Test):
 
-    def __init__(self, query, check_level = "low"):
+    def __init__(self, query, check_level = "low", islp = False):
         logging.config.fileConfig("../config/logging.ini")
         self.logger = logging.getLogger("alleria")
         self.check_level = check_level
+        if islp:
+            self.log_identifier = "SortLp"
+        else:
+            self.log_identifie = "Sort"
         super(SortTest, self).__init__(query)
 
     def get_orderdata_list(self):
@@ -37,7 +41,6 @@ class SortTest(Test):
             self.logger.debug('sort - data set is null: {0}'.format(self.query))
             return False
 
-
         if self.http_len_data == other.http_len_data:
             if len(set(str(self.http_data)) - set(str(other.http_data))) == 0: # if not str() then unhashable type: 'list' raised
                 reverse_data = other.get_orderdata_list()
@@ -46,8 +49,12 @@ class SortTest(Test):
                 if conv_data(order_data_list, self.check_level) == conv_data(reverse_data, self.check_level):
                     return True
                 else:
-                    self.logger.error("""sort - the content of data not equal: {0}
-                                                                                  {1}\n\n""".format(order_data_list, reverse_data))
+                    self.logger.error("""{0}\n
+                                         [{1}] the content of data not equal: {2}
+                                                                              {3}\n\n""".format(self.query,
+                                                                                                self.log_identifier,
+                                                                                                 order_data_list,
+                                                                                                 reverse_data))
                     return False
             else:
                 self.logger.error('sort - data set not equal')

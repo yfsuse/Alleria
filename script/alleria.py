@@ -20,29 +20,25 @@ def run_sort(islp = False):
     suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
 
     if islp:
-        error_log = '../log/sortlp.error.log.{0}'.format(suffix)
         success_log = '../log/sortlp.success.log.{0}'.format(suffix)
     else:
-        error_log = '../log/sort.error.log.{0}'.format(suffix)
         success_log = '../log/sort.success.log.{0}'.format(suffix)
 
-    err_handler = open(error_log, 'w')
     suc_handler = open(success_log, 'w')
     count = 0
-    for case in case_list[:50]:
-        positive_case_result = SortTest(case)
+    for case in case_list[:5]:
+        positive_case_result = SortTest(case, islp)
         negative_case = QueryProducer(case).get_reverse_order()
-        negative_case_result = SortTest(negative_case)
+        negative_case_result = SortTest(negative_case, islp)
         if negative_case_result == positive_case_result:
             suc_handler.writelines(case + '\n')
         else:
-            err_handler.writelines(case + '\n')
+            pass
         count += 1
         if islp:
             print ctime() + " run lp sort case at : ", count
         else:
             print ctime() + " run sort case at : ", count
-    err_handler.close()
     suc_handler.close()
 
 
@@ -52,29 +48,25 @@ def run_page(islp = False):
     suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
 
     if islp:
-        error_log = '../log/pagelp.error.log.{0}'.format(suffix)
         success_log = '../log/pagelp.success.log.{0}'.format(suffix)
     else:
-        error_log = '../log/page.error.log.{0}'.format(suffix)
         success_log = '../log/page.success.log.{0}'.format(suffix)
 
-    err_handler = open(error_log, 'w')
     suc_handler = open(success_log, 'w')
     count = 0
-    for case in case_list[:50]:
-        negative_case_result = PageTest(case)
+    for case in case_list[:5]:
+        negative_case_result = PageTest(case, islp)
         positive_case = QueryProducer(case).get_no_page_query()
-        positive_case_result = PageTest(positive_case)
+        positive_case_result = PageTest(positive_case, islp)
         if negative_case_result == positive_case_result:
             suc_handler.writelines(case + '\n')
         else:
-            err_handler.writelines(case + '\n')
+            pass
         count += 1
         if islp:
             print ctime() + " run lp page case at : ", count
         else:
             print ctime() + " run page case at : ", count
-    err_handler.close()
     suc_handler.close()
 
 if __name__ == '__main__':
