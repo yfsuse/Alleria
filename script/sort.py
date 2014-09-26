@@ -24,7 +24,7 @@ class SortTest(Test):
         if islp:
             self.log_identifier = "SortLp"
         else:
-            self.log_identifie = "Sort"
+            self.log_identifier = "Sort"
         super(SortTest, self).__init__(query)
 
     def get_orderdata_list(self):
