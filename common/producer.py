@@ -39,7 +39,7 @@ def get_page():
 
 def get_size():
 
-    return choice(range(1, 20))
+    return choice(range(1, 50))
 
 def get_sort_cases(islp = False):
 
