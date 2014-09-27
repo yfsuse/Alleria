@@ -42,9 +42,6 @@ class PageTest(Test):
         no_page_data_len = len(no_page_data)
         page_data = self.http_data[1:]
 
-        print no_page_data
-        print page_data
-
         size = self.queryparser.get_size()
         page = self.queryparser.get_page()
 
