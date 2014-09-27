@@ -35,11 +35,11 @@ def get_order():
 
 def get_page():
 
-    return choice(range(0, 10))
+    return choice(range(1, 10))
 
 def get_size():
 
-    return choice(range(1, 50))
+    return choice(range(1, 10))
 
 def get_sort_cases(islp = False):
 
@@ -74,7 +74,7 @@ def get_page_cases(islp = False):
     group_combinations = get_groups()
     for group in group_combinations:
         old_pagination = '"size":1000000,"page":0'
-        new_pagination = '"size":{0},"page":{1}'.format(get_page(), get_size())
+        new_pagination = '"size":{0},"page":{1}'.format(get_size(), get_page())
         query_str = REF_QUERY_TEMPLATE % (group, get_order())
         page_query_str = query_str.replace(old_pagination, new_pagination)
         query = page_query_str.replace("'", '"')

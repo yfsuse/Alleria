@@ -3,9 +3,6 @@
 
 __author__ = 'jeff.yu'
 
-
-
-
 def conv_data(seq, check_level = "low"):
     if check_level == "high":
         return seq
@@ -16,7 +13,7 @@ def conv_data(seq, check_level = "low"):
             for data in dataset:
                 try:
                     int_data = int(round(data, -1))
-                except ValueError as e:
+                except (ValueError, TypeError) as e:
                     int_data = data
                 inner_data.append(int_data)
         else:
@@ -40,7 +37,6 @@ def sub_seq(seq_a, seq_b):
     difference = 0
     for enum in zip(seq_a, seq_b):
         difference += sub_list(enum)
-    print difference
     if difference > 2:
         return False
     return True

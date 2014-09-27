@@ -22,9 +22,9 @@ class SortTest(Test):
         self.logger = logging.getLogger("alleria")
         self.check_level = check_level
         if islp:
-            self.log_identifier = "SortLp"
+            self.log_identifier = "sortlp"
         else:
-            self.log_identifier = "Sort"
+            self.log_identifier = "sort"
         super(SortTest, self).__init__(query)
 
     def get_orderdata_list(self):
@@ -36,7 +36,6 @@ class SortTest(Test):
             return None
         except ValueError as e:
             order_index = len(qp.get_group()) + qp.get_data().index(orderBy) - 1
-        print order_index
         orderdata = []
         for dataset in self.http_data[1:]:
             orderdata.append(dataset[order_index])

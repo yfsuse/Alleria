@@ -23,9 +23,9 @@ class PageTest(Test):
         super(PageTest, self).__init__(query)
         self.check_level = check_level
         if islp:
-            self.log_identifier = "PageLp"
+            self.log_identifier = "pagelp"
         else:
-            self.log_identifier = "Page"
+            self.log_identifier = "page"
         logging.config.fileConfig("../config/logging.ini")
         self.logger = logging.getLogger("alleria")
         self.queryparser = QueryProducer(self.query)
@@ -38,26 +38,41 @@ class PageTest(Test):
 
     def __eq__(self, other):
 
-        try:
-            page_data = conv_data(self.http_data[1:], self.check_level)
-            no_page_data = conv_data(other.get_split_data(), self.check_level)
-        except TypeError as e:
-            self.logger.error("page - data set is null:  {0}".format(self.query))
+        no_page_data = other.http_data
+        no_page_data_len = len(no_page_data)
+        page_data = self.http_data[1:]
+
+        print no_page_data
+        print page_data
+
+        size = self.queryparser.get_size()
+        page = self.queryparser.get_page()
+
+        if page_data == []:
+            if size * (page+1) > no_page_data_len:
+                return True
+            else:
+                self.logger.error(""" [{0}] size * page >> total record count, should no result returned
+                                       {1}""".format(self.log_identifier, self.query))
+                return False
+
+
+        if no_page_data_len == 0:
+            self.logger.error(""" [{0}] no page, and return None
+                                  {1}
+                              """.format(self.log_identifier, other.query))
             return False
 
-        if page_data == None or no_page_data == None:
-            self.logger.error("page - data set is null:  {0}".format(self.query))
-            return False
+        page_data_converted = conv_data(self.http_data[1:], self.check_level)
+        no_page_data_converted = conv_data(other.get_split_data(), self.check_level)
 
-        if len(set(str(page_data)) - set(str(no_page_data))) == 0: # step 2: if data set not equals return false
+        if len(set(str(page_data_converted)) - set(str(no_page_data_converted))) == 0: # step 2: if data set not equals return false
             return True
         else:
-            self.logger.error("""{0}\n
-                                 [{1}] content of data is not equal {2}
-                                                                    {3}""".format(self.query,
-                                                                                  self.log_identifier,
-                                                                                  page_data,
-                                                                                  no_page_data))
+            self.logger.error("""
+                              [{0}] data set is not equal
+                              {1}
+                              """.format(self.log_identifier, self.query))
             return False
 
 if __name__ == '__main__':
