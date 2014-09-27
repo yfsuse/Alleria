@@ -19,6 +19,12 @@ class QueryProducer(object):
         except TypeError as e:
             self.query_object = self.query_str
 
+    def get_group(self):
+        return self.query_object.get('group')
+
+    def get_data(self):
+        return self.query_object.get('data')
+
     def get_page(self):
         return self.query_object.get('settings').get('pagination').get('page')
 

@@ -12,7 +12,7 @@ from common.parser import QueryProducer
 from base import Test
 import logging
 import logging.config
-from common.dataconv import conv_data
+from common.dataconv import sub_seq
 
 
 class SortTest(Test):
@@ -28,8 +28,15 @@ class SortTest(Test):
         super(SortTest, self).__init__(query)
 
     def get_orderdata_list(self):
-        orderBy = QueryProducer(self.query).get_order_key()
-        order_index = self.http_data[0].index(orderBy)
+        qp = QueryProducer(self.query)
+        orderBy = qp.get_order_key()
+        try:
+            order_index = self.http_data[0].index(orderBy)
+        except TypeError as e:
+            return None
+        except ValueError as e:
+            order_index = len(qp.get_group()) + qp.get_data().index(orderBy) - 1
+        print order_index
         orderdata = []
         for dataset in self.http_data[1:]:
             orderdata.append(dataset[order_index])
@@ -37,31 +44,15 @@ class SortTest(Test):
 
     def __eq__(self, other):
 
-        if self.http_len_data == 0 or other.http_len_data == 0:
-            self.logger.debug('sort - data set is null: {0}'.format(self.query))
+        reverse_data = other.get_orderdata_list()
+        if reverse_data == None:
             return False
+        reverse_data.reverse()
+        order_data_list = self.get_orderdata_list()
+        if order_data_list == None:
+            return False
+        return sub_seq(reverse_data, order_data_list)
 
-        if self.http_len_data == other.http_len_data:
-            if len(set(str(self.http_data)) - set(str(other.http_data))) == 0: # if not str() then unhashable type: 'list' raised
-                reverse_data = other.get_orderdata_list()
-                reverse_data.reverse()
-                order_data_list = self.get_orderdata_list()
-                if conv_data(order_data_list, self.check_level) == conv_data(reverse_data, self.check_level):
-                    return True
-                else:
-                    self.logger.error("""{0}\n
-                                         [{1}] the content of data not equal: {2}
-                                                                              {3}\n\n""".format(self.query,
-                                                                                                self.log_identifier,
-                                                                                                 order_data_list,
-                                                                                                 reverse_data))
-                    return False
-            else:
-                self.logger.error('sort - data set not equal')
-                return False
-        else:
-            self.logger.error('sort - data len not equal')
-            return False
 
 if __name__ == '__main__':
     query = '{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{"offer_id":{"$eq":-1}}},"sort":[{"orderBy":"clicks","order":-1}]}'
