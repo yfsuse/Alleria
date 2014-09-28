@@ -77,10 +77,14 @@ def runner():
     config_parser = ConfigParser.ConfigParser()
     config_parser.read('../config/running.ini')
     level = config_parser.get('check_rule', 'check_level')
-    sort_count = int(config_parser.get('sort', 'runcasecount'))
-    sort_lp_count = int(config_parser.get('sortlp', 'runcasecount'))
-    page_count = int(config_parser.get('page', 'runcasecount'))
-    page_lp_count = int(config_parser.get('pagelp', 'runcasecount'))
+    try:
+        sort_count = int(config_parser.get('sort', 'runcasecount'))
+        sort_lp_count = int(config_parser.get('sortlp', 'runcasecount'))
+        page_count = int(config_parser.get('page', 'runcasecount'))
+        page_lp_count = int(config_parser.get('pagelp', 'runcasecount'))
+    except ValueError as e:
+        sort_count, sort_lp_count, page_count, page_lp_count = None, None, None, None
+
 
     run_sort(islp=True, check_level=level, runcount=sort_lp_count)
     run_sort(islp=False, check_level=level, runcount=sort_count)
