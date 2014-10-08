@@ -10,6 +10,7 @@ sys.path.append(sys.path[0].replace('/script', ''))
 from common.producer import *
 from sort import SortTest
 from page import PageTest
+from lp import LpTest
 from common.parser import QueryProducer
 import ConfigParser
 from time import ctime, strftime, localtime
@@ -72,6 +73,20 @@ def run_page(islp = False, check_level = "low", runcount = 5):
             print ctime() + " run page case at : ", count
     suc_handler.close()
 
+def run_lp(runcount = 5):
+    case_list = get_lp_case()
+    suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
+    success_log =  '../log/pagelp.success.log.{0}'.format(suffix)
+    suc_handler = open(success_log, 'w')
+    count = 0
+    cases = case_list[slice(None, runcount)]
+    for case in cases:
+        lt = LpTest(case)
+        if lt.isSuccess:
+            suc_handler.writelines(case + '\n')
+        count += 1
+        print ctime() + " run lp case at : ", count
+    suc_handler.close()
 
 def runner():
     config_parser = ConfigParser.ConfigParser()
@@ -82,14 +97,16 @@ def runner():
         sort_lp_count = int(config_parser.get('sortlp', 'runcasecount'))
         page_count = int(config_parser.get('page', 'runcasecount'))
         page_lp_count = int(config_parser.get('pagelp', 'runcasecount'))
+        lp_count = int(config_parser.get('lp', 'runcasecount'))
     except ValueError as e:
-        sort_count, sort_lp_count, page_count, page_lp_count = None, None, None, None
+        sort_count, sort_lp_count, page_count, page_lp_count, lp_count = None, None, None, None, None
 
 
     run_sort(islp=True, check_level=level, runcount=sort_lp_count)
     run_sort(islp=False, check_level=level, runcount=sort_count)
     run_page(islp=False, check_level=level, runcount=page_count)
     run_page(islp=True, check_level=level, runcount=page_lp_count)
+    run_lp(lp_count)
 
 
 if __name__ == '__main__':

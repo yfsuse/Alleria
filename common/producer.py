@@ -86,8 +86,24 @@ def get_page_cases(islp = False):
         case_list.append(query)
     return case_list
 
+def get_lp_case():
+    case_list = []
+    group_combinations = get_groups()
+    for group in group_combinations:
+        old_pattern = '"contrack_druid_datasource_ds","report_id"'
+        lp_pattern = '"contrack_druid_datasource_ds", "process_type":"lp", "report_id"'
+        query_str = QUERY_TEMPLATE.replace(old_pattern, lp_pattern)
+        # remove orderby pattern
+        be_remove = ',"sort":[{"orderBy":"%s","order":-1}]'
+        query_str = query_str.replace(be_remove, '') % (group)
+        # add offer_id
+        query_str = query_str.replace('],"data"', ',"offer_id"],"data"').replace("'", '"')
+        case_list.append(query_str)
+    return case_list
+
 if __name__ == '__main__':
-    sort_cases = get_sort_cases(islp=True)[:5]
-    for case in sort_cases:
-        print case
+    # sort_cases = get_sort_cases(islp=True)[:5]
+    # for case in sort_cases:
+    #     print case
     # get_page_cases()
+    print get_lp_case()

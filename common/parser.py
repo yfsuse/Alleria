@@ -6,6 +6,7 @@ __author__ = 'jeff.yu'
 
 
 import json
+from common.tools import recursion_del_key
 
 class QueryProducer(object):
 
@@ -51,7 +52,18 @@ class QueryProducer(object):
         new_pagination = '"size":10000,"page":0'
         return self.query_str.replace(old_pagination, new_pagination)
 
+    def get_no_lp_query(self):
+        """
+        :return: query that remove process_type key and add filter which offer_id = -1
+        """
+
+        no_lp_query = recursion_del_key(self.query_object, 'process_type')
+        no_lp_query['filters']['$and'] = {"offer_id":{"$eq":-1}}
+        str_no_lp_query = json.dumps(no_lp_query).replace("'", '"').replace(', "', ',"')
+        return str_no_lp_query
+
 
 
 if __name__ == '__main__':
-    print QueryProducer('{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{"offer_id":{"$eq":-1}}},"sort":[{"orderBy":"clicks","order":-1}]}').get_no_page_query()
+    qop = QueryProducer('{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","process_type":"lp", "report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{}},"sort":[]}')
+    print qop.get_no_lp_query()
