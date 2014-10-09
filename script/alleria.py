@@ -76,7 +76,7 @@ def run_page(islp = False, check_level = "low", runcount = 5):
 def run_lp(runcount = 5):
     case_list = get_lp_case()
     suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
-    success_log =  '../log/pagelp.success.log.{0}'.format(suffix)
+    success_log =  '../log/lp.success.log.{0}'.format(suffix)
     suc_handler = open(success_log, 'w')
     count = 0
     cases = case_list[slice(None, runcount)]

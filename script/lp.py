@@ -56,12 +56,14 @@ class LpTest(Test):
 
         selectNoLpValueList = [listGeneric_convert_listStr(data) for data in selectNoLpValueList]
         for selectLpValue in selectLpValueList:
-            if listGeneric_convert_listStr(selectLpValue) in selectNoLpValueList:
+            selectLpStrValue = listGeneric_convert_listStr(selectLpValue)
+            if selectLpStrValue in selectNoLpValueList:
                 continue
             else:
                 self.logger.error(""" lp clicks not equal to no lp clicks:
+                                      {0}
                                       {1}
-                """.format(self.query))
+                """.format(self.query, selectLpStrValue))
                 return False
         return True
 
