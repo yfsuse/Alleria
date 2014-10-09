@@ -96,8 +96,8 @@ def get_lp_case():
         # remove orderby pattern
         be_remove = ',"sort":[{"orderBy":"%s","order":-1}]'
         query_str = query_str.replace(be_remove, '') % (group)
-        if "offer_id" in query_str:
-            pass
+        if "['offer_id']" in query_str:
+            continue
         else:
             # add offer_id
             query_str = query_str.replace('],"data"', ',"offer_id"],"data"').replace("'", '"')

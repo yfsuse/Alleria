@@ -17,7 +17,8 @@ class QueryProducer(object):
     def convert_to_object(self):
         try:
             self.query_object = json.loads(self.query_str)
-        except TypeError as e:
+        except Exception as e:
+            print self.query_str
             self.query_object = self.query_str
 
     def get_group(self):
