@@ -95,12 +95,10 @@ def get_lp_case():
         query_str = QUERY_TEMPLATE.replace(old_pattern, lp_pattern)
         # remove orderby pattern
         be_remove = ',"sort":[{"orderBy":"%s","order":-1}]'
+        if group.count('offer_id') == 0:
+            group.append('offer_id')
         query_str = query_str.replace(be_remove, '') % (group)
-        if "['offer_id']" in query_str:
-            continue
-        else:
-            # add offer_id
-            query_str = query_str.replace('],"data"', ',"offer_id"],"data"').replace("'", '"')
+        query_str = query_str.replace("'", '"')
         case_list.append(query_str)
     return case_list
 
@@ -109,11 +107,17 @@ def get_topn_case():
     case_list = []
     group_combinations = get_groups()
     for group in group_combinations:
+        islp = choice((True, False))
         old_pattern = '"net"],"filters"'
         lp_pattern = '"net"],"topn":{"metricvalue":"%s","threshold":%d},"filters"' % (choice(COMMON_DATA), choice(range(1, 10)))
         query_str = QUERY_TEMPLATE.replace(old_pattern, lp_pattern)
         # remove orderby pattern
         be_remove = ',"sort":[{"orderBy":"%s","order":-1}]'
+        if islp:
+            query_str = query_str.replace('"contrack_druid_datasource_ds","report_id"',
+                                          '"contrack_druid_datasource_ds", "process_type":"lp", "report_id"')
+            if group.count('offer_id') == 0:
+                group.append('offer_id')
         query_str = query_str.replace(be_remove, ',"sort":[]') % (group)
         query_str = query_str.replace("'", '"')
         case_list.append(query_str)
