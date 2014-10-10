@@ -26,12 +26,10 @@ def get_data(query_data):
     try:
         f = urllib2.build_opener().open(urllib2.Request(query_url, post_data), timeout = 60).read()
         format_data = json.loads(f)['data']['data']
-    except TypeError as tp:
-        logger.debug("Http Error, Wait 60 Seconds, Can't Get Data: {0}\t{1}".format(query_data, f))
     except Exception as e:
-        logger.debug('parser response data to json Error: {0}\n{1}'.format(query_data, f))
+        logger.debug('parser response data to json Error: {0}\n{1}'.format(query_data, e.message))
     return format_data
 
 
 if __name__ == '__main__':
-    print get_data('{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{"offer_id":{"$eq":-1}}},"sort":[{"orderBy":"clicks","order":-1}]}')
+    print get_data('{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds", "report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"topn":{"metricvalue":"clicks","threshold":10},"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{}},"sort":[]}')

@@ -15,10 +15,10 @@ class QueryProducer(object):
         self.convert_to_object()
 
     def convert_to_object(self):
+        print type(self.query_str)
         try:
             self.query_object = json.loads(self.query_str)
         except Exception as e:
-            print self.query_str
             self.query_object = self.query_str
 
     def get_group(self):
@@ -35,6 +35,12 @@ class QueryProducer(object):
 
     def get_order_key(self):
         return self.query_object.get('sort')[0].get('orderBy')
+
+    def get_topn_metricvalue(self):
+        return self.query_object.get('topn').get('metricvalue')
+
+    def get_topn_threshold(self):
+        return self.query_object.get('topn').get('threshold')
 
     def get_reverse_order(self):
         old_order = self.query_object.get('sort')[0].get('order')
@@ -63,8 +69,19 @@ class QueryProducer(object):
         str_no_lp_query = json.dumps(no_lp_query).replace("'", '"').replace(', "', ',"')
         return str_no_lp_query
 
+    def get_no_topn_query(self):
+
+        orderItem = self.get_topn_metricvalue()
+        sortMap = {}
+        sortMap["orderBy"] = orderItem
+        sortMap["order"] = -1
+        self.query_object['sort'] = [sortMap]
+        del self.query_object['topn']
+        queryStr = json.dumps(self.query_object)
+        return queryStr.replace("'", '"').replace(', "', ',"')
 
 
 if __name__ == '__main__':
-    qop = QueryProducer('{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","process_type":"lp", "report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{}},"sort":[]}')
-    print qop.get_no_lp_query()
+    qop = QueryProducer('{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","process_type":"lp", "report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"topn":{"metricvalue":"click","threshold":10},"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{}},"sort":[]}')
+    print qop.get_no_topn_query()
+    print qop.get_topn_threshold()

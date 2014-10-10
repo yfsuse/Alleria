@@ -4,5 +4,14 @@
 __author__ = 'jeff.yu'
 
 
+"""
+
+operation supported: $eq $gt $gte $lt $lte
+
+$eq
+
+
+"""
+
 class FilterTest():
     pass
