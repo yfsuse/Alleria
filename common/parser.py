@@ -15,7 +15,6 @@ class QueryProducer(object):
         self.convert_to_object()
 
     def convert_to_object(self):
-        print type(self.query_str)
         try:
             self.query_object = json.loads(self.query_str)
         except Exception as e:
@@ -32,6 +31,9 @@ class QueryProducer(object):
 
     def get_size(self):
         return self.query_object.get('settings').get('pagination').get('size')
+
+    def get_filters(self):
+        return self.query_object.get('filters').get('$and')
 
     def get_order_key(self):
         return self.query_object.get('sort')[0].get('orderBy')
@@ -63,7 +65,6 @@ class QueryProducer(object):
         """
         :return: query that remove process_type key and add filter which offer_id = -1
         """
-
         no_lp_query = recursion_del_key(self.query_object, 'process_type')
         no_lp_query['filters']['$and'] = {"offer_id":{"$eq":-1}}
         str_no_lp_query = json.dumps(no_lp_query).replace("'", '"').replace(', "', ',"')
@@ -80,8 +81,13 @@ class QueryProducer(object):
         queryStr = json.dumps(self.query_object)
         return queryStr.replace("'", '"').replace(', "', ',"')
 
+    def getNoFilterQuery(self):
+
+        self.query_object['filters']['$and'] = {}
+        queryStr = json.dumps(self.query_object)
+        return queryStr.replace("'", '"').replace(', "', ',"').replace(": ", ":")
+
 
 if __name__ == '__main__':
-    qop = QueryProducer('{"settings":{"time":{"start":1404172800,"end":1409529600,"timezone":0},"data_source":"contrack_druid_datasource_ds","process_type":"lp", "report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["year","week","offer_id"],"topn":{"metricvalue":"click","threshold":10},"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"filters":{"$and":{}},"sort":[]}')
-    print qop.get_no_topn_query()
-    print qop.get_topn_threshold()
+    qop = QueryProducer('{"settings":{"time":{"start":1404172800,"end":1412121600,"timezone":0},"data_source":"ymds_druid_datasource","report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["screen_h", "sub2", "sub8", "offer_id", "year", "month", "week", "day"],"data":["click", "conversion"],"filters":{"$and":{"month": {"$eq": "Jul"}, "day": {"$neq": "2014-08-06"}, "year": {"$neq": "2014"}}},"sort":[]}')
+    print qop.getNoFilterQuery()

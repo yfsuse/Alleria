@@ -3,6 +3,7 @@
 __author__ = 'jeff.yu'
 
 import json
+from random import choice, randint
 
 
 def recursion_del_key(del_dict, del_key):
@@ -60,8 +61,48 @@ def vagueEquals(listA, listB):
     return listGeneric_convert_listStr(listA) == listGeneric_convert_listStr(listB)
 
 
+def mutichoice(seqlist):
+
+    returnList = []
+    seqListLen = len(seqlist)
+    for i in range(randint(1, seqListLen)):
+        select = choice(seqlist)
+        if select not in returnList:
+            returnList.append(select)
+    return returnList
+
+def makeDayList(beginYear, endYear, beginMonth, endMonth , beginDay):
+
+    dayList = []
+    for year in range(beginYear, endYear):
+        for month in range(beginMonth, endMonth):
+            for day in range(beginDay, 30):
+                if day < 10:
+                    strDay = '0{0}'.format(day)
+                else:
+                    strDay = str(day)
+
+                if month < 10:
+                    strMonth = '0{0}'.format(month)
+                else:
+                    strMonth = str(month)
+                wholeDay = '{0}-{1}-{2}'.format(year, strMonth, strDay)
+                dayList.append(wholeDay)
+    return dayList
+
+
+def toJsonList(dataSet):
+    key = dataSet[0]
+    values = dataSet[1:]
+    returnData = []
+    for value in values:
+        data = dict(zip(key, value))
+        returnData.append(data)
+    return returnData
+
 
 if __name__ == '__main__':
+    pass
     # del_dict = {"settings":{"time":{"start":1411689600,"end":1411776000,"timezone":0},"process_type":"lp",
     #                         "report_id":"232sds3232","data_source":"contrack_druid_datasource_ds",
     #                         "pagination":{"size":1000000,"page":0}},
@@ -72,4 +113,6 @@ if __name__ == '__main__':
     # del_key = 'process_type'
     # print recursion_del_key(del_dict, del_key)
     # print listList_convert_listMap([[u'device_id', u'offer_id', u'clicks', u'outs', u'convs', u'income', u'cost', u'ctr', u'cr', u'roi', u'net'], [1, u'108', 286, 0, 0, 0.0, 445.344, 0.0, 0.0, -1.0, -445.344]])
-    print vagueEquals([1, u'', 212], [u'1', u'', 212])
+    # print vagueEquals([1, u'', 212], [u'1', u'', 212])
+    # print mutichoice(('year','month','day','week','hour'))
+    # print makeDayList(2014,2015, 7, 10, 1)
