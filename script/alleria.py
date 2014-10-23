@@ -32,6 +32,8 @@ def run_sort(islp = False, check_level = "low", runcount = 5):
     suc_handler = open(success_log, 'w')
     count = 0
     cases = case_list[slice(None, runcount)]
+    sumCount = len(cases)
+    print 'Get sort case count: {0}\n'.format(sumCount)
     for case in cases:
         positive_case_result = SortTest(case, check_level, islp)
         negative_case = QueryProducer(case).get_reverse_order()
@@ -42,9 +44,9 @@ def run_sort(islp = False, check_level = "low", runcount = 5):
             pass
         count += 1
         if islp:
-            print ctime() + " run lp sort case at : ", count
+            print "[{0}] run lp sort case at: {1}/{2} ".format(ctime(), count, sumCount)
         else:
-            print ctime() + " run sort case at : ", count
+            print "[{0}] run sort case at: {1}/{2} ".format(ctime(), count, sumCount)
     suc_handler.close()
 
 
@@ -61,6 +63,8 @@ def run_page(islp=False, check_level="low", runcount = 5):
     suc_handler = open(success_log, 'w')
     count = 0
     cases = case_list[slice(None, runcount)]
+    sumCount = len(cases)
+    print 'Get page case count: {0}\n'.format(sumCount)
     for case in cases:
         negative_case_result = PageTest(case, check_level, islp)
         positive_case = QueryProducer(case).get_no_page_query()
@@ -71,9 +75,9 @@ def run_page(islp=False, check_level="low", runcount = 5):
             pass
         count += 1
         if islp:
-            print ctime() + " run lp page case at : ", count
+            print "[{0}] run lp page case at: {1}/{2} ".format(ctime(), count, sumCount)
         else:
-            print ctime() + " run page case at : ", count
+            print "[{0}] run page case at: {1}/{2} ".format(ctime(), count, sumCount)
     suc_handler.close()
 
 
@@ -87,7 +91,7 @@ def run_topn(runcount = 5):
     sumCount = len(cases)
     logging.config.fileConfig("../config/logging.ini")
     logger = logging.getLogger("root")
-    print 'Get case count: {0}\n'.format(sumCount)
+    print 'Get topn case count: {0}\n'.format(sumCount)
     for case in cases:
         lt = TopnTest(case)
         if lt._compare():
@@ -97,7 +101,7 @@ def run_topn(runcount = 5):
             expected = lt.getExpected()
             logger.error(" >> [topn Error] {0}\nActual: {1}\nExpected: {2}\n ".format(case, actual, expected))
         count += 1
-        print ctime() + " Run topn case at : {0}/{1}".format(count, sumCount)
+        print "[{0}] Run topn case at : {1}/{2}".format(ctime(), count, sumCount)
     suc_handler.close()
 
 
@@ -109,12 +113,13 @@ def run_lp(runcount = 5):
     count = 0
     cases = case_list[slice(None, runcount)]
     sumCount = len(cases)
+    print 'Get case count: {0}\n'.format(sumCount)
     for case in cases:
         lt = LpTest(case)
         if lt.isSuccess:
             suc_handler.writelines(case + '\n')
         count += 1
-        print ctime() + " run lp case at : {0}/{1}".format(count, sumCount)
+        print "[{0}] Run lp case at : {1}/{2}".format(ctime(), count, sumCount)
     suc_handler.close()
 
 
@@ -128,6 +133,7 @@ def run_timeselect(runcount = 5):
     sumCount = len(cases)
     logging.config.fileConfig("../config/logging.ini")
     logger = logging.getLogger("root")
+    print 'Get case count: {0}\n'.format(sumCount)
     for case in cases:
         tst = TimeSelectTest(case)
         isEquals = tst._compare()
@@ -137,7 +143,7 @@ def run_timeselect(runcount = 5):
             actual = tst.getActual()
             expected = tst.getExpected()
             logger.error(" >> [timeFilter Error] {0}\nactual:{1}\nexpected:{2} ".format(case, actual, expected))
-        print ctime() + " Run timeselect case at : {0}/{1}".format(count, sumCount)
+        print "[{0}] Run timeselect case at : {1}/{2}".format(ctime(), count, sumCount)
         count += 1
     suc_handler.close()
 
@@ -158,11 +164,11 @@ def runner():
         sort_count, sort_lp_count, page_count, page_lp_count, lp_count, topn_count, timeselectcount = None, None, None, None, None, None, None
 
 
-    # run_sort(islp=True, check_level=level, runcount=sort_lp_count)
-    # run_sort(islp=False, check_level=level, runcount=sort_count)
-    # run_page(islp=False, check_level=level, runcount=page_count)
-    # run_page(islp=True, check_level=level, runcount=page_lp_count)
-    # run_lp(lp_count)
+    run_sort(islp=True, check_level=level, runcount=sort_lp_count)
+    run_sort(islp=False, check_level=level, runcount=sort_count)
+    run_page(islp=False, check_level=level, runcount=page_count)
+    run_page(islp=True, check_level=level, runcount=page_lp_count)
+    run_lp(lp_count)
     run_topn(topn_count)
     run_timeselect(timeSelect_count)
 
