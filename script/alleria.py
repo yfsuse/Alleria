@@ -87,9 +87,8 @@ def run_topn(runcount = 5):
     sumCount = len(cases)
     logging.config.fileConfig("../config/logging.ini")
     logger = logging.getLogger("root")
-    print 'get case count: ', sumCount
+    print 'Get case count: {0}\n'.format(sumCount)
     for case in cases:
-        print case
         lt = TopnTest(case)
         if lt._compare():
             suc_handler.writelines(case + '\n')
@@ -98,7 +97,7 @@ def run_topn(runcount = 5):
             expected = lt.getExpected()
             logger.error(" >> [topn Error] {0}\nActual: {1}\nExpected: {2}\n ".format(case, actual, expected))
         count += 1
-        print ctime() + " run topn case at : {0}/{1}".format(count, sumCount)
+        print ctime() + "Run topn case at : {0}/{1}".format(count, sumCount)
     suc_handler.close()
 
 
@@ -138,7 +137,7 @@ def run_timeselect(runcount = 5):
             actual = tst.getActual()
             expected = tst.getExpected()
             logger.error(" >> [timeFilter Error] {0}\nactual:{1}\nexpected:{2} ".format(case, actual, expected))
-        print ctime() + " run timeselect case at : {0}/{1}".format(count, sumCount)
+        print ctime() + " Run timeselect case at : {0}/{1}".format(count, sumCount)
         count += 1
     suc_handler.close()
 

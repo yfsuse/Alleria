@@ -10,8 +10,7 @@ from base import Test
 from common.parser import QueryProducer
 from common.http import get_data
 from common.tools import getMetricvalueData
-import logging
-import logging.config
+
 
 class TopnTest(Test):
 
