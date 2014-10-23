@@ -12,9 +12,11 @@ from sort import SortTest
 from page import PageTest
 from lp import LpTest
 from topn import TopnTest
+from timeselect import TimeSelectTest
 from common.parser import QueryProducer
 import ConfigParser
 from time import ctime, strftime, localtime
+import logging
 
 
 def run_sort(islp = False, check_level = "low", runcount = 5):
@@ -46,7 +48,7 @@ def run_sort(islp = False, check_level = "low", runcount = 5):
     suc_handler.close()
 
 
-def run_page(islp = False, check_level = "low", runcount = 5):
+def run_page(islp=False, check_level="low", runcount = 5):
 
     case_list = get_page_cases(islp)
     suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
@@ -74,25 +76,34 @@ def run_page(islp = False, check_level = "low", runcount = 5):
             print ctime() + " run page case at : ", count
     suc_handler.close()
 
+
 def run_topn(runcount = 5):
     case_list = get_topn_case()
     suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
-    success_log =  '../log/topn.success.log.{0}'.format(suffix)
+    success_log = '../log/topn.success.log.{0}'.format(suffix)
     suc_handler = open(success_log, 'w')
     count = 0
     cases = case_list[slice(None, runcount)]
+    logging.config.fileConfig("../config/logging.ini")
+    logger = logging.getLogger("root")
     for case in cases:
+        print case
         lt = TopnTest(case)
         if lt._compare():
             suc_handler.writelines(case + '\n')
+        else:
+            actual = lt.getActual()
+            expected = lt.getExpected()
+            logger.error(" >> [topn Error] {0}\nActual: {1}\nExpected: {2}\n ".format(case, actual, expected))
         count += 1
         print ctime() + " run topn case at : ", count
     suc_handler.close()
 
+
 def run_lp(runcount = 5):
     case_list = get_lp_case()
     suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
-    success_log =  '../log/lp.success.log.{0}'.format(suffix)
+    success_log = '../log/lp.success.log.{0}'.format(suffix)
     suc_handler = open(success_log, 'w')
     count = 0
     cases = case_list[slice(None, runcount)]
@@ -103,6 +114,30 @@ def run_lp(runcount = 5):
         count += 1
         print ctime() + " run lp case at : ", count
     suc_handler.close()
+
+
+def run_timeselect(runcount = 5):
+    caseList = get_timeselect_case()
+    suffix = strftime("%Y-%m-%d-%H_%M_%S", localtime())
+    success_log = '../log/timeFilter.success.log.{0}'.format(suffix)
+    suc_handler = open(success_log, 'w')
+    count = 1
+    cases = caseList[slice(None, runcount)]
+    logging.config.fileConfig("../config/logging.ini")
+    logger = logging.getLogger("root")
+    for case in cases:
+        tst = TimeSelectTest(case)
+        isEquals = tst._compare()
+        if isEquals:
+            suc_handler.writelines(case + '\n')
+        else:
+            actual = tst.getActual()
+            expected = tst.getExpected()
+            logger.error(" >> [timeFilter Error] {0}\nactual:{1}\nexpected:{2} ".format(case, actual, expected))
+        print ctime() + " run timeselect case at : ", count
+        count += 1
+    suc_handler.close()
+
 
 def runner():
     config_parser = ConfigParser.ConfigParser()
@@ -115,8 +150,9 @@ def runner():
         page_lp_count = int(config_parser.get('pagelp', 'runcasecount'))
         lp_count = int(config_parser.get('lp', 'runcasecount'))
         topn_count = int(config_parser.get('topn', 'runcasecount'))
+        timeSelect_count = int(config_parser.get('timefilter', 'runcasecount'))
     except ValueError as e:
-        sort_count, sort_lp_count, page_count, page_lp_count, lp_count, topn_count = None, None, None, None, None, None
+        sort_count, sort_lp_count, page_count, page_lp_count, lp_count, topn_count, timeselectcount = None, None, None, None, None, None, None
 
 
     # run_sort(islp=True, check_level=level, runcount=sort_lp_count)
@@ -125,6 +161,7 @@ def runner():
     # run_page(islp=True, check_level=level, runcount=page_lp_count)
     # run_lp(lp_count)
     run_topn(topn_count)
+    run_timeselect(timeSelect_count)
 
 if __name__ == '__main__':
     runner()

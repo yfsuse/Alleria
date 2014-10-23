@@ -14,6 +14,9 @@ class QueryProducer(object):
         self.query_str = query
         self.convert_to_object()
 
+    def __str__(self):
+        return self.query_str
+
     def convert_to_object(self):
         try:
             self.query_object = json.loads(self.query_str)
@@ -79,7 +82,7 @@ class QueryProducer(object):
         self.query_object['sort'] = [sortMap]
         del self.query_object['topn']
         queryStr = json.dumps(self.query_object)
-        return queryStr.replace("'", '"').replace(', "', ',"')
+        return queryStr.replace("'", '"').replace(', "', ',"').replace(': ', ':')
 
     def getNoFilterQuery(self):
 
@@ -89,5 +92,6 @@ class QueryProducer(object):
 
 
 if __name__ == '__main__':
-    qop = QueryProducer('{"settings":{"time":{"start":1404172800,"end":1412121600,"timezone":0},"data_source":"ymds_druid_datasource","report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["screen_h", "sub2", "sub8", "offer_id", "year", "month", "week", "day"],"data":["click", "conversion"],"filters":{"$and":{"month": {"$eq": "Jul"}, "day": {"$neq": "2014-08-06"}, "year": {"$neq": "2014"}}},"sort":[]}')
-    print qop.getNoFilterQuery()
+    qop = QueryProducer('{"settings":{"time":{"start":1404201600,"end":1409558400,"timezone":0},"data_source":"contrack_druid_datasource_ds","report_id":"121212","pagination":{"size":1000000,"page":0}},"group":["ref_site"],"data":["clicks","outs","ctr","cr","income","cost","convs","roi","net"],"topn":{"metricvalue":"roi","threshold":3},"filters":{"$and":{}},"sort":[]}')
+    print qop.get_topn_metricvalue()
+    # print qop.get_filters()

@@ -38,6 +38,10 @@ class LpTest(Test):
         lp_data_map = listList_convert_listMap(lp_data_list)
         no_lp_data_map = listList_convert_listMap(no_lp_data_list)
 
+        if not lp_data_map:
+            return False
+
+
         selectLpValueList = []
         for lp_data in lp_data_map:
             selectLpValues = []

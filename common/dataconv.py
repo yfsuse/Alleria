@@ -3,6 +3,7 @@
 
 __author__ = 'jeff.yu'
 
+
 def conv_data(seq, check_level = "low"):
     if check_level == "high":
         return seq
