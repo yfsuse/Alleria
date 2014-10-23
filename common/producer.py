@@ -134,7 +134,6 @@ def get_topn_case():
                     continue
         query_str = query_str.replace(be_remove, ',"sort":[]') % (group)
         query_str = query_str.replace("'", '"')
-        print query_str
         case_list.append(query_str)
     return case_list
 
