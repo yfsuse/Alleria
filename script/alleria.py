@@ -84,8 +84,10 @@ def run_topn(runcount = 5):
     suc_handler = open(success_log, 'w')
     count = 0
     cases = case_list[slice(None, runcount)]
+    sumCount = len(cases)
     logging.config.fileConfig("../config/logging.ini")
     logger = logging.getLogger("root")
+    print 'get case count: ', sumCount
     for case in cases:
         print case
         lt = TopnTest(case)
@@ -96,7 +98,7 @@ def run_topn(runcount = 5):
             expected = lt.getExpected()
             logger.error(" >> [topn Error] {0}\nActual: {1}\nExpected: {2}\n ".format(case, actual, expected))
         count += 1
-        print ctime() + " run topn case at : ", count
+        print ctime() + " run topn case at : {0}/{1}".format(count, sumCount)
     suc_handler.close()
 
 
@@ -107,12 +109,13 @@ def run_lp(runcount = 5):
     suc_handler = open(success_log, 'w')
     count = 0
     cases = case_list[slice(None, runcount)]
+    sumCount = len(cases)
     for case in cases:
         lt = LpTest(case)
         if lt.isSuccess:
             suc_handler.writelines(case + '\n')
         count += 1
-        print ctime() + " run lp case at : ", count
+        print ctime() + " run lp case at : {0}/{1}".format(count, sumCount)
     suc_handler.close()
 
 
@@ -123,6 +126,7 @@ def run_timeselect(runcount = 5):
     suc_handler = open(success_log, 'w')
     count = 1
     cases = caseList[slice(None, runcount)]
+    sumCount = len(cases)
     logging.config.fileConfig("../config/logging.ini")
     logger = logging.getLogger("root")
     for case in cases:
@@ -134,7 +138,7 @@ def run_timeselect(runcount = 5):
             actual = tst.getActual()
             expected = tst.getExpected()
             logger.error(" >> [timeFilter Error] {0}\nactual:{1}\nexpected:{2} ".format(case, actual, expected))
-        print ctime() + " run timeselect case at : ", count
+        print ctime() + " run timeselect case at : {0}/{1}".format(count, sumCount)
         count += 1
     suc_handler.close()
 
