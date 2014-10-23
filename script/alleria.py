@@ -163,7 +163,6 @@ def runner():
     except ValueError as e:
         sort_count, sort_lp_count, page_count, page_lp_count, lp_count, topn_count, timeselectcount = None, None, None, None, None, None, None
 
-
     run_sort(islp=True, check_level=level, runcount=sort_lp_count)
     run_sort(islp=False, check_level=level, runcount=sort_count)
     run_page(islp=False, check_level=level, runcount=page_count)
