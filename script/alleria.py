@@ -97,7 +97,7 @@ def run_topn(runcount = 5):
             expected = lt.getExpected()
             logger.error(" >> [topn Error] {0}\nActual: {1}\nExpected: {2}\n ".format(case, actual, expected))
         count += 1
-        print ctime() + "Run topn case at : {0}/{1}".format(count, sumCount)
+        print ctime() + " Run topn case at : {0}/{1}".format(count, sumCount)
     suc_handler.close()
 
 
